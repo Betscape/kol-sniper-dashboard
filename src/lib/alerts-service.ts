@@ -81,7 +81,7 @@ export class AlertsService {
       console.log(`🔍 Checking alerts for ${users.length} users`);
       
       for (const user of users) {
-        await this.checkUserAlerts(user as { _id: string; email: string; alert_settings: { isActive: boolean; kolNames: string[]; minKolsCount?: number; minPnlPercent?: number; positionStatus?: string; alertTypes: string[] } });
+        await this.checkUserAlerts(user as unknown as { _id: string; email: string; alert_settings: { isActive: boolean; kolNames: string[]; minKolsCount?: number; minPnlPercent?: number; positionStatus?: string; alertTypes: string[] } });
       }
       
     } catch (error) {

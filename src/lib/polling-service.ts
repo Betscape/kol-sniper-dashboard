@@ -150,6 +150,8 @@ export class PollingService {
           }
           
           const kolData = kolMap.get(walletAddress);
+          if (!kolData) continue;
+          
           kolData.total_tokens_traded += 1;
           kolData.total_volume_sol += kol.total_volume_sol || 0;
           kolData.total_realized_pnl_sol += kol.realized_pnl_sol || 0;
@@ -195,8 +197,7 @@ export class PollingService {
           best_trade_pnl: Math.max(...kolData.pnl_values, 0),
           worst_trade_pnl: Math.min(...kolData.pnl_values, 0),
           current_positions: 0, // This would need to be calculated based on current holdings
-          total_trades: kolData.total_trades,
-          last_updated: new Date()
+          total_trades: kolData.total_trades
         };
 
         await GlobalKOL.findOneAndUpdate(
@@ -232,7 +233,7 @@ export class PollingService {
     return GlobalKOL.find()
       .sort({ momentum_score: -1 })
       .limit(limit)
-      .lean();
+      .lean() as unknown as IGlobalKOL[];
   }
 
   async getLatestTokens(limit: number = 50): Promise<unknown[]> {

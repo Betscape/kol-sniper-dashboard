@@ -294,7 +294,7 @@ export class CopytradeSimulator {
       .select('name momentum_score total_trades')
       .sort({ momentum_score: -1 })
       .limit(100)
-      .lean();
+      .lean() as unknown as Array<{ name: string; momentum_score: number; total_trades: number }>;
   }
   
   async getSimulationHistory(): Promise<SimulationResult[]> {
