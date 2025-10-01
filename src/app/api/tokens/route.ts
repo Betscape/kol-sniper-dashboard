@@ -7,36 +7,27 @@ export async function GET(request: NextRequest) {
     await connectDB();
     
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
-    const sortBy = searchParams.get('sortBy') || 'last_kol_buy';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
-    const minKols = parseInt(searchParams.get('minKols') || '0');
-    const minPnl = parseFloat(searchParams.get('minPnl') || '0');
+    const sort = searchParams.get('sort') || '-last_kol_buy';
+    const page = parseInt(searchParams.get('page') || '1');
     const skip = (page - 1) * limit;
-    
-    // Build filter object
-    const filter: Record<string, unknown> = {};
-    if (minKols > 0) {
-      filter.kols_count = { $gte: minKols };
+
+    // Parse sort parameter
+    let sortObj: any = {};
+    if (sort.startsWith('-')) {
+      sortObj[sort.substring(1)] = -1;
+    } else {
+      sortObj[sort] = 1;
     }
-    if (minPnl > 0) {
-      filter.avg_kol_pnl = { $gte: minPnl };
-    }
-    
-    // Build sort object
-    const sort: Record<string, 1 | -1> = {};
-    sort[sortBy] = sortOrder === 'desc' ? -1 : 1;
-    
-    // Execute query
-    const tokens = await Token.find(filter)
-      .populate('kol_buyers')
-      .sort(sort)
+
+    const tokens = await Token.find()
+      .sort(sortObj)
       .skip(skip)
-      .limit(limit);
-    
-    const total = await Token.countDocuments(filter);
-    
+      .limit(limit)
+      .lean();
+
+    const total = await Token.countDocuments();
+
     return NextResponse.json({
       success: true,
       data: tokens,
@@ -47,11 +38,15 @@ export async function GET(request: NextRequest) {
         pages: Math.ceil(total / limit)
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching tokens:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch tokens' },
+      { 
+        success: false, 
+        error: 'Failed to fetch tokens',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }
