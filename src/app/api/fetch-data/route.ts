@@ -191,3 +191,4 @@ async function updateGlobalKOLStats() {
     console.error('❌ Error updating global KOL stats:', error);
   }
 }
+

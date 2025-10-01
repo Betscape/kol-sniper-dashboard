@@ -17,6 +17,9 @@ import {
   TrendingUpIcon,
   TrendingDownIcon
 } from '@heroicons/react/24/outline';
+import VolumeChart from '@/components/charts/VolumeChart';
+import KOLPerformanceChart from '@/components/charts/KOLPerformanceChart';
+import TokenActivityChart from '@/components/charts/TokenActivityChart';
 
 interface AnalyticsData {
   totalTokens: number;
@@ -61,6 +64,32 @@ export default function AnalyticsPage() {
       { type: 'kol', name: 'MoonTrader', action: 'New position', timestamp: '12 minutes ago', value: 45.3 },
     ]
   };
+
+  // Mock chart data
+  const volumeData = [
+    { time: '00:00', volume: 1200000, kols: 45, tokens: 89 },
+    { time: '04:00', volume: 980000, kols: 38, tokens: 76 },
+    { time: '08:00', volume: 2100000, kols: 67, tokens: 134 },
+    { time: '12:00', volume: 3200000, kols: 89, tokens: 201 },
+    { time: '16:00', volume: 2800000, kols: 78, tokens: 187 },
+    { time: '20:00', volume: 1900000, kols: 56, tokens: 123 },
+    { time: '24:00', volume: 1500000, kols: 42, tokens: 98 }
+  ];
+
+  const kolPerformanceData = [
+    { name: 'CryptoWhale', winRate: 89.5, pnl: 245.6, trades: 127 },
+    { name: 'MoonTrader', winRate: 76.3, pnl: 189.2, trades: 89 },
+    { name: 'DiamondHands', winRate: 82.1, pnl: 156.7, trades: 95 },
+    { name: 'PumpKing', winRate: 71.8, pnl: 134.5, trades: 78 },
+    { name: 'SolanaSniper', winRate: 68.9, pnl: 98.3, trades: 56 },
+    { name: 'MemeMaster', winRate: 74.2, pnl: 112.8, trades: 67 }
+  ];
+
+  const tokenActivityData = [
+    { name: 'High Activity', value: 45, color: '#10B981' },
+    { name: 'Medium Activity', value: 32, color: '#3B82F6' },
+    { name: 'Low Activity', value: 23, color: '#F59E0B' }
+  ];
 
   return (
     <div className="min-h-screen bg-black text-white">
@@ -231,46 +260,20 @@ export default function AnalyticsPage() {
                 ))}
               </div>
             </div>
-            <div className="h-64 bg-gray-800/50 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <ChartBarIcon className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">Chart visualization coming soon</p>
-                <p className="text-sm text-gray-500">Recharts integration in progress</p>
-              </div>
-            </div>
+            <VolumeChart data={volumeData} selectedMetric={selectedMetric} />
           </div>
 
           {/* KOL Performance */}
           <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-xl p-6">
-            <h3 className="text-xl font-bold text-white mb-6">Top Performing KOL</h3>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold">
-                    1
-                  </div>
-                  <div>
-                    <p className="font-semibold text-white">{mockData.topPerformingKOL.name}</p>
-                    <p className="text-sm text-gray-400">Top Performer</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-green-400">{mockData.topPerformingKOL.winRate}%</p>
-                  <p className="text-sm text-gray-400">Win Rate</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-gray-800/30 rounded-lg">
-                  <p className="text-sm text-gray-400">Total PNL</p>
-                  <p className="text-xl font-bold text-green-400">${mockData.topPerformingKOL.totalPnl.toLocaleString()}</p>
-                </div>
-                <div className="p-4 bg-gray-800/30 rounded-lg">
-                  <p className="text-sm text-gray-400">Trades</p>
-                  <p className="text-xl font-bold text-white">247</p>
-                </div>
-              </div>
-            </div>
+            <h3 className="text-xl font-bold text-white mb-6">KOL Performance Comparison</h3>
+            <KOLPerformanceChart data={kolPerformanceData} />
           </div>
+        </div>
+
+        {/* Token Activity Distribution */}
+        <div className="bg-gradient-to-r from-gray-900/80 to-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-xl p-6 mb-8">
+          <h3 className="text-xl font-bold text-white mb-6">Token Activity Distribution</h3>
+          <TokenActivityChart data={tokenActivityData} />
         </div>
 
         {/* Recent Activity */}
@@ -312,3 +315,4 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
