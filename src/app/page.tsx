@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import useSWR from 'swr';
 
 interface Token {
@@ -43,14 +44,14 @@ export default function HomePage() {
   });
 
   // Fetch latest tokens
-  const { data: tokensData, error: tokensError, mutate: mutateTokens } = useSWR(
+  const { data: tokensData, error: tokensError } = useSWR(
     `/api/tokens?limit=20&sort=-last_kol_buy`,
     fetcher,
     { refreshInterval: 30000 } // Refresh every 30 seconds
   );
 
   // Fetch top KOLs
-  const { data: kolsData, error: kolsError, mutate: mutateKOLs } = useSWR(
+  const { data: kolsData, error: kolsError } = useSWR(
     `/api/kols?limit=10&sort=-momentum_score`,
     fetcher,
     { refreshInterval: 60000 } // Refresh every minute
@@ -210,9 +211,11 @@ export default function HomePage() {
                 <div key={token._id} className="bg-gray-800 p-6 rounded-lg hover:bg-gray-750 transition-colors">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <img 
+                      <Image 
                         src={token.image_url || '/placeholder-token.png'} 
                         alt={token.symbol}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = '/placeholder-token.png';
@@ -285,9 +288,11 @@ export default function HomePage() {
                     <div className="flex items-center justify-center w-12 h-12 bg-gray-700 rounded-full text-xl font-bold">
                       #{index + 1}
                     </div>
-                    <img 
+                    <Image 
                       src={kol.profile_image || '/placeholder-kol.png'} 
                       alt={kol.name}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-full"
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = '/placeholder-kol.png';

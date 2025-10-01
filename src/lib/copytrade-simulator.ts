@@ -115,11 +115,11 @@ export class CopytradeSimulator {
     return result;
   }
   
-  private async processTokenTrades(token: any, config: SimulationConfig, currentCapital: number): Promise<Trade[]> {
+  private async processTokenTrades(token: { token_address: string; name: string; symbol: string; kols_count: number; kol_buyers: Array<{ name: string; first_buy_at: string; avg_buy_price: number; position_status: string; last_action: string; avg_sell_price: number; avg_hold_time_seconds: number }> }, config: SimulationConfig, currentCapital: number): Promise<Trade[]> {
     const trades: Trade[] = [];
     
     // Get KOL buyers for this token
-    const relevantKOLs = token.kol_buyers.filter((kol: any) => 
+    const relevantKOLs = token.kol_buyers.filter((kol) => 
       config.kolNames.includes(kol.name)
     );
     
@@ -131,7 +131,7 @@ export class CopytradeSimulator {
     }
     
     // Sort KOLs by buy time
-    relevantKOLs.sort((a: any, b: any) => new Date(a.first_buy_at).getTime() - new Date(b.first_buy_at).getTime());
+    relevantKOLs.sort((a, b) => new Date(a.first_buy_at).getTime() - new Date(b.first_buy_at).getTime());
     
     for (const kol of relevantKOLs) {
       const buyTime = new Date(kol.first_buy_at);
@@ -297,7 +297,7 @@ export class CopytradeSimulator {
       .lean();
   }
   
-  async getSimulationHistory(userId: string): Promise<SimulationResult[]> {
+  async getSimulationHistory(_userId: string): Promise<SimulationResult[]> {
     // This would be implemented with a SimulationHistory model
     // For now, return empty array
     return [];
@@ -314,4 +314,5 @@ export class CopytradeSimulator {
   }
 }
 
-export default new CopytradeSimulator();
+const copytradeSimulator = new CopytradeSimulator();
+export default copytradeSimulator;

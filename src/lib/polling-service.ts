@@ -1,4 +1,4 @@
-import { APIClient, APIToken } from './api-client';
+import { APIClient } from './api-client';
 import { DataProcessor } from './data-processor';
 import connectDB from './mongodb';
 import Token from '@/models/Token';
@@ -115,10 +115,22 @@ export class PollingService {
       const tokens = await Token.find({ 'kol_buyers.0': { $exists: true } });
       
       // Aggregate KOL data across all tokens
-      const kolMap = new Map<string, any>();
+      const kolMap = new Map<string, {
+        name: string;
+        wallet_address: string;
+        twitter: string;
+        profile_image: string;
+        total_tokens_traded: number;
+        total_volume_sol: number;
+        total_realized_pnl_sol: number;
+        total_trades: number;
+        pnl_values: number[];
+        hold_times: number[];
+        last_active: Date;
+      }>();
       
       for (const token of tokens) {
-        for (const kol of token.kol_buyers) {
+        for (const kol of token.kol_buyers as any[]) {
           const walletAddress = kol.wallet_address;
           
           if (!kolMap.has(walletAddress)) {
@@ -223,7 +235,7 @@ export class PollingService {
       .lean();
   }
 
-  async getLatestTokens(limit: number = 50): Promise<any[]> {
+  async getLatestTokens(limit: number = 50): Promise<unknown[]> {
     await connectDB();
     return Token.find()
       .sort({ last_kol_buy: -1 })
@@ -231,7 +243,7 @@ export class PollingService {
       .lean();
   }
 
-  async getTokensByKOL(kolName: string, limit: number = 50): Promise<any[]> {
+  async getTokensByKOL(kolName: string, limit: number = 50): Promise<unknown[]> {
     await connectDB();
     return Token.find({
       'kol_buyers.name': { $regex: kolName, $options: 'i' }
@@ -242,4 +254,5 @@ export class PollingService {
   }
 }
 
-export default new PollingService();
+const pollingService = new PollingService();
+export default pollingService;

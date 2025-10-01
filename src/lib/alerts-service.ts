@@ -1,6 +1,5 @@
 import connectDB from './mongodb';
 import Token from '@/models/Token';
-import GlobalKOL from '@/models/GlobalKOL';
 import User from '@/models/User';
 
 export interface AlertConfig {
@@ -92,7 +91,7 @@ export class AlertsService {
     }
   }
 
-  private async checkUserAlerts(user: any): Promise<void> {
+  private async checkUserAlerts(user: { _id: string; alert_settings: any }): Promise<void> {
     const settings = user.alert_settings;
     if (!settings || !settings.isActive) return;
     
@@ -144,7 +143,7 @@ export class AlertsService {
     }
   }
 
-  private async createKOLBuyAlert(userId: string, token: any, kol: any): Promise<Alert> {
+  private async createKOLBuyAlert(userId: string, token: { token_address: string; name: string; symbol: string; kols_count: number }, kol: { name: string; wallet_address: string; avg_buy_price: number; realized_pnl_percent: number }): Promise<Alert> {
     const pnlPercent = kol.realized_pnl_percent || 0;
     const priority = this.determinePriority(pnlPercent, token.kols_count);
     
@@ -173,7 +172,7 @@ export class AlertsService {
     return 'low';
   }
 
-  private async sendNotifications(user: any, alert: Alert): Promise<void> {
+  private async sendNotifications(user: { email: string; _id: string; alert_settings: any }, alert: Alert): Promise<void> {
     const settings = user.alert_settings;
     if (!settings || !settings.alertTypes) return;
     
@@ -225,7 +224,7 @@ export class AlertsService {
     console.log('Email content:', emailContent);
   }
 
-  private async sendPushAlert(user: any, alert: Alert): Promise<void> {
+  private async sendPushAlert(user: { _id: string }, alert: Alert): Promise<void> {
     // This would integrate with OneSignal or similar push notification service
     console.log(`📱 Push alert to user ${user._id}: ${alert.title}`);
     
@@ -255,7 +254,7 @@ export class AlertsService {
     console.log('Push payload:', payload);
   }
 
-  private async sendBrowserAlert(user: any, alert: Alert): Promise<void> {
+  private async sendBrowserAlert(user: { _id: string }, alert: Alert): Promise<void> {
     // This would use WebSocket or Server-Sent Events for real-time browser notifications
     console.log(`🌐 Browser alert to user ${user._id}: ${alert.title}`);
     
@@ -320,4 +319,5 @@ export class AlertsService {
   }
 }
 
-export default new AlertsService();
+const alertsService = new AlertsService();
+export default alertsService;
