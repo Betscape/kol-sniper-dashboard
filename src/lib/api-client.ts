@@ -57,9 +57,32 @@ export interface APIResponse {
   items: APIToken[];
 }
 
+export interface APIPollingStats {
+  totalRecords: number;
+  processedRecords: number;
+  lastFetchTime: Date;
+  isPolling: boolean;
+  errors: string[];
+}
+
+export interface TokenFilters {
+  minKolsCount?: number;
+  minPnl?: number;
+  positionStatus?: 'holding' | 'fully_sold';
+  kolName?: string;
+  limit?: number;
+}
+
 export class APIClient {
   private static instance: APIClient;
   private baseUrl: string;
+  private pollingStats: APIPollingStats = {
+    totalRecords: 0,
+    processedRecords: 0,
+    lastFetchTime: new Date(),
+    isPolling: false,
+    errors: []
+  };
 
   private constructor() {
     this.baseUrl = API_BASE_URL;
@@ -95,6 +118,10 @@ export class APIClient {
   }
 
   async fetchAllTokens(): Promise<APIToken[]> {
+    this.pollingStats.isPolling = true;
+    this.pollingStats.errors = [];
+    this.pollingStats.processedRecords = 0;
+    
     const allTokens: APIToken[] = [];
     let page = 1;
     let hasMore = true;
@@ -104,8 +131,14 @@ export class APIClient {
         const response = await this.fetchTokens(page, 10000);
         allTokens.push(...response.items);
         
+        // Update stats
+        this.pollingStats.totalRecords = response.totalItems;
+        this.pollingStats.processedRecords += response.items.length;
+        
         hasMore = page < response.totalPages;
         page++;
+        
+        console.log(`📄 Fetched page ${page-1}/${response.totalPages} (${this.pollingStats.processedRecords}/${this.pollingStats.totalRecords} records)`);
         
         // Add a small delay to avoid rate limiting
         if (hasMore) {
@@ -113,11 +146,47 @@ export class APIClient {
         }
       } catch (error) {
         console.error(`Error fetching page ${page}:`, error);
+        this.pollingStats.errors.push(`Page ${page}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         break;
       }
     }
 
+    this.pollingStats.lastFetchTime = new Date();
+    this.pollingStats.isPolling = false;
+    
+    console.log(`✅ Fetch complete: ${allTokens.length} records processed`);
     return allTokens;
+  }
+
+  async fetchTokensWithFilters(filters: TokenFilters): Promise<APIToken[]> {
+    // For now, fetch all and filter client-side
+    // In production, you'd want to implement server-side filtering
+    const allTokens = await this.fetchAllTokens();
+    
+    return allTokens
+      .filter(token => {
+        if (filters.minKolsCount && token.kols_count < filters.minKolsCount) return false;
+        if (filters.positionStatus) {
+          const hasMatchingPosition = token.kol_buyers.some(kol => kol.position_status === filters.positionStatus);
+          if (!hasMatchingPosition) return false;
+        }
+        if (filters.kolName) {
+          const hasMatchingKOL = token.kol_buyers.some(kol => 
+            kol.name.toLowerCase().includes(filters.kolName!.toLowerCase())
+          );
+          if (!hasMatchingKOL) return false;
+        }
+        if (filters.minPnl) {
+          const maxPnl = Math.max(...token.kol_buyers.map(kol => kol.realized_pnl_percent));
+          if (maxPnl < filters.minPnl) return false;
+        }
+        return true;
+      })
+      .slice(0, filters.limit || 100);
+  }
+
+  getPollingStats(): APIPollingStats {
+    return { ...this.pollingStats };
   }
 
   async fetchTokenByAddress(tokenAddress: string): Promise<APIToken | null> {
