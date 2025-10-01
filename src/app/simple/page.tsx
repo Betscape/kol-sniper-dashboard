@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function SimplePage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -10,18 +12,18 @@ export default function SimplePage() {
             The Ultimate Copytrading Hub for Solana Meme Coins
           </p>
           <div className="flex justify-center space-x-4">
-            <a 
+            <Link 
               href="/kols" 
               className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg transition-colors"
             >
               👑 KOL Leaderboard
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="/simulator" 
               className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg transition-colors"
             >
               🎯 Simulator
-            </a>
+            </Link>
           </div>
         </header>
 
@@ -49,18 +51,18 @@ export default function SimplePage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-8">🚀 Ready to Start Sniper Trading?</h2>
           <div className="space-x-4">
-            <a 
+            <Link 
               href="/auth/signup" 
               className="bg-yellow-600 hover:bg-yellow-700 px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
             >
               Get Started
-            </a>
-            <a 
+            </Link>
+            <Link 
               href="/auth/signin" 
               className="bg-gray-700 hover:bg-gray-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
             >
               Sign In
-            </a>
+            </Link>
           </div>
         </div>
       </div>

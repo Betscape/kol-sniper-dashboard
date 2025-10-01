@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function TestPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
@@ -12,12 +14,12 @@ export default function TestPage() {
             <p>NEXTAUTH_SECRET: {process.env.NEXTAUTH_SECRET ? '✅ Set' : '❌ Not set'}</p>
           </div>
         </div>
-        <a 
+        <Link 
           href="/" 
           className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg transition-colors"
         >
           Go to Homepage
-        </a>
+        </Link>
       </div>
     </div>
   );

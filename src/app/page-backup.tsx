@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 export default function HomePageBackup() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -37,18 +35,18 @@ export default function HomePageBackup() {
           </div>
           
           <div className="mt-8 space-x-4">
-            <Link 
+            <a 
               href="/test" 
               className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg transition-colors"
             >
               Test Page
-            </Link>
-            <Link 
+            </a>
+            <a 
               href="/simple" 
               className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg transition-colors"
             >
               Simple Page
-            </Link>
+            </a>
           </div>
         </div>
       </div>
