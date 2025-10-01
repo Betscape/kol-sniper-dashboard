@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "KOL Sniper Dashboard - Ultimate Copytrading Hub",
-  description: "Real-time KOL activity tracking and copytrade simulation for Solana meme coins",
+  title: "KOL Sniper Dashboard",
+  description: "Ultimate Copytrading Hub for Solana Meme Coins",
 };
 
 export default function RootLayout({
