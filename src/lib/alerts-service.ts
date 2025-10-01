@@ -76,7 +76,7 @@ export class AlertsService {
       const users = await User.find({
         'alert_settings.isActive': true,
         'alert_settings.kolNames.0': { $exists: true }
-      });
+      }).select('_id email alert_settings').lean();
       
       console.log(`🔍 Checking alerts for ${users.length} users`);
       
@@ -91,7 +91,7 @@ export class AlertsService {
     }
   }
 
-  private async checkUserAlerts(user: { _id: string; alert_settings: { isActive: boolean; kolNames: string[]; minKolsCount?: number; minPnlPercent?: number; positionStatus?: string; alertTypes: string[] } }): Promise<void> {
+  private async checkUserAlerts(user: { _id: string; email: string; alert_settings: { isActive: boolean; kolNames: string[]; minKolsCount?: number; minPnlPercent?: number; positionStatus?: string; alertTypes: string[] } }): Promise<void> {
     const settings = user.alert_settings;
     if (!settings || !settings.isActive) return;
     
