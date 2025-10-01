@@ -91,7 +91,7 @@ export class AlertsService {
     }
   }
 
-  private async checkUserAlerts(user: { _id: string; alert_settings: any }): Promise<void> {
+  private async checkUserAlerts(user: { _id: string; alert_settings: { isActive: boolean; kolNames: string[]; minKolsCount?: number; minPnlPercent?: number; positionStatus?: string; alertTypes: string[] } }): Promise<void> {
     const settings = user.alert_settings;
     if (!settings || !settings.isActive) return;
     
@@ -115,7 +115,7 @@ export class AlertsService {
         if (existingAlert) continue;
         
         // Check KOL buyers for this token
-        const relevantKOLs = token.kol_buyers.filter((kol: any) => 
+        const relevantKOLs = token.kol_buyers.filter((kol: { name: string; first_buy_at: string; realized_pnl_percent: number }) => 
           settings.kolNames.includes(kol.name)
         );
         
@@ -172,7 +172,7 @@ export class AlertsService {
     return 'low';
   }
 
-  private async sendNotifications(user: { email: string; _id: string; alert_settings: any }, alert: Alert): Promise<void> {
+  private async sendNotifications(user: { email: string; _id: string; alert_settings: { alertTypes: string[] } }, alert: Alert): Promise<void> {
     const settings = user.alert_settings;
     if (!settings || !settings.alertTypes) return;
     

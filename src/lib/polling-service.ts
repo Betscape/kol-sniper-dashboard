@@ -130,7 +130,7 @@ export class PollingService {
       }>();
       
       for (const token of tokens) {
-        for (const kol of token.kol_buyers as any[]) {
+        for (const kol of token.kol_buyers as Array<{ wallet_address: string; name: string; twitter: string; profile_image: string; first_buy_at: string; total_volume_sol: number; realized_pnl_sol: number; total_buys: number; total_sells: number; realized_pnl_percent: number; avg_hold_time_seconds: number }>) {
           const walletAddress = kol.wallet_address;
           
           if (!kolMap.has(walletAddress)) {
@@ -217,7 +217,7 @@ export class PollingService {
     isRunning: boolean;
     lastPollTime: Date | null;
     pollInterval: number;
-    apiStats: any;
+    apiStats: { totalRecords: number; processedRecords: number; lastFetchTime: Date; isPolling: boolean; errors: string[] };
   } {
     return {
       isRunning: this.isRunning,

@@ -297,7 +297,7 @@ export class CopytradeSimulator {
       .lean();
   }
   
-  async getSimulationHistory(_userId: string): Promise<SimulationResult[]> {
+  async getSimulationHistory(): Promise<SimulationResult[]> {
     // This would be implemented with a SimulationHistory model
     // For now, return empty array
     return [];
