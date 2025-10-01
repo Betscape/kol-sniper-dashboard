@@ -14,7 +14,7 @@ interface KOLPerformanceChartProps {
 }
 
 export default function KOLPerformanceChart({ data }: KOLPerformanceChartProps) {
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ payload: KOLData }>; label?: string }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (

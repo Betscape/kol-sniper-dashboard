@@ -10,7 +10,7 @@ export async function POST() {
     const { DataProcessor } = await import('@/lib/data-processor');
     const connectDB = (await import('@/lib/mongodb')).default;
     const Token = (await import('@/models/Token')).default;
-    const GlobalKOL = (await import('@/models/GlobalKOL')).default;
+    // const GlobalKOL = (await import('@/models/GlobalKOL')).default;
     
     // Connect to database
     await connectDB();

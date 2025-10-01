@@ -2,20 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import useSWR from 'swr';
 import { 
   ChartBarIcon, 
   FireIcon, 
   UserGroupIcon, 
   CurrencyDollarIcon,
   ArrowUpIcon,
-  ArrowDownIcon,
-  EyeIcon,
   BellIcon,
-  Cog6ToothIcon,
-  TrendingUpIcon,
-  TrendingDownIcon
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import VolumeChart from '@/components/charts/VolumeChart';
 import KOLPerformanceChart from '@/components/charts/KOLPerformanceChart';
@@ -40,7 +34,6 @@ interface AnalyticsData {
   }>;
 }
 
-const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<'24h' | '7d' | '30d' | 'all'>('7d');

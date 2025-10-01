@@ -12,8 +12,10 @@ import {
   BookmarkIcon,
   ChartPieIcon,
   ClockIcon,
-  CurrencyDollarIcon,
-  TrophyIcon
+  TrophyIcon,
+  XMarkIcon,
+  UserGroupIcon,
+  TrashIcon
 } from '@heroicons/react/24/outline';
 
 interface UserProfile {
@@ -45,7 +47,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'simulations' | 'settings'>('overview');
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [, setShowEditModal] = useState(false);
 
   const mockProfile: UserProfile = {
     name: 'Crypto Trader',

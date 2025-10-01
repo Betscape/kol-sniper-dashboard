@@ -10,7 +10,6 @@ import {
   UserGroupIcon, 
   CurrencyDollarIcon,
   ArrowUpIcon,
-  ArrowDownIcon,
   EyeIcon,
   BellIcon,
   Cog6ToothIcon
@@ -319,7 +318,7 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div className="relative">
-                          <Image
+          <Image
                             src={token.image_url || '/placeholder-token.png'}
                             alt={token.symbol}
                             width={56}
@@ -425,7 +424,7 @@ export default function HomePage() {
                       <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl text-white font-bold text-lg">
                         #{index + 1}
                       </div>
-                      <Image
+          <Image
                         src={kol.profile_image || '/placeholder-kol.png'}
                         alt={kol.name}
                         width={56}

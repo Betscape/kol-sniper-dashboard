@@ -369,7 +369,7 @@ export default function AlertsPage() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Position Status</label>
                   <select
                     value={newAlert.positionStatus}
-                    onChange={(e) => setNewAlert({...newAlert, positionStatus: e.target.value as any})}
+                    onChange={(e) => setNewAlert({...newAlert, positionStatus: e.target.value as 'holding' | 'fully_sold' | 'partial_sold'})}
                     className="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                   >
                     <option value="all">All Positions</option>
